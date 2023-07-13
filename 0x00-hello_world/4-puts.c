@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int main(void)
-/* a C program that prints exactly "Programming is like building a multilingual puzzle", followed by a new line.*/
+/* C code that prints "Programming is like building a multilingual puzzle"*/
 {
 puts("\"Programming is like building a multilingual puzzle");
 return (0);
