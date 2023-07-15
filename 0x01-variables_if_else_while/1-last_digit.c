@@ -3,15 +3,18 @@
 #include <time.h>
 /**
  * main - Entry point of the program
+ *
  * the last digit of a random number stored in the variable n.
+ * is greater than 5, less than 6 (excluding 0), or 0.
+ *
  * Return: Always 0 (Success)
  */
 int main(void)
 {
 int n;
 srand(time(0)); /* Initialize random seed */
-n = rand() % 100;
-printf("Last digit of %02d is ", n);
+n = rand() - RAND_MAX / 2;
+printf("Last digit of %d is ", n);
 if (n % 10 > 5)
 printf("%d and is greater than 5\n", n % 10);
 else if (n % 10 == 0)
