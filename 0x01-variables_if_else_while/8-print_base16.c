@@ -11,6 +11,7 @@
 int main(void)
 {
 int number = 0;
+char letter;
 
 /* Print numbers from 0 to 9 */
 while (number <= 9)
@@ -20,7 +21,7 @@ number++;
 }
 
 /* Print letters a to f */
-char letter = 'a';
+letter = 'a';
 while (letter <= 'f')
 {
 putchar(letter);
