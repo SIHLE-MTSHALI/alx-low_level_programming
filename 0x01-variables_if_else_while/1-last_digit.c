@@ -1,30 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
 /**
  * main - Entry point of the program
- *
- *This program assigns a random number to the variable n and
- *prints the last digit of the number along with additional information.
- *
+ * the last digit of a random number stored in the variable n.
  * Return: Always 0 (Success)
  */
 int main(void)
 {
 int n;
-
-srand(time(0));
-n = rand();
-
-printf("Last digit of %d is %d ", n, n % 10);
-
+srand(time(0)); /* Initialize random seed */
+n = rand() % 100;
+printf("Last digit of %02d is ", n);
 if (n % 10 > 5)
-printf("and is greater than 5\n");
+printf("%d and is greater than 5\n", n % 10);
 else if (n % 10 == 0)
-printf("and is 0\n");
+printf("%d and is 0\n", n % 10);
 else
-printf("and is less than 6 and not 0\n");
-
+printf("%d and is less than 6 and not 0\n", n % 10);
 return (0);
 }

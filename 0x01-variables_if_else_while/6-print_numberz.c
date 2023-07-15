@@ -15,7 +15,7 @@ int number = 0;
 /* Print numbers from 0 to 9 */
 while (number <= 9)
 {
-putchar(number++ + '0'); /* Convert number to character and print, then increment number */
+putchar(number++ + '0');
 }
 
 putchar('\n'); /* Print newline character */
