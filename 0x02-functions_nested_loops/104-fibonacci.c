@@ -10,8 +10,8 @@
  */
 void add_arrays(int *a, int *b, int *res)
 {
-int carry = 0;
-for (int i = 0; i < SIZE; i++)
+int i, carry = 0;
+for (i = 0; i < SIZE; i++)
 {
 res[i] = a[i] + b[i] + carry;
 carry = res[i] / 10;
@@ -34,11 +34,11 @@ printf("%d", a[i--]);
 
 /**
  * main - print first 98 Fibonacci numbers
- * Return: 0 on success
+ * Return: Always 0
  */
 int main(void)
 {
-int i;
+int i, j;
 int fib1[SIZE] = {0}, fib2[SIZE] = {1}, fib3[SIZE] = {0};
 fib1[0] = 1;
 fib2[0] = 2;
@@ -49,7 +49,7 @@ add_arrays(fib1, fib2, fib3);
 print_array(fib3);
 if (i != 98)
 printf(", ");
-for (int j = 0; j < SIZE; j++)
+for (j = 0; j < SIZE; j++)
 {
 fib1[j] = fib2[j];
 fib2[j] = fib3[j];
