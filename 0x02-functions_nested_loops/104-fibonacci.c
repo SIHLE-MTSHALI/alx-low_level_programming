@@ -40,13 +40,15 @@ int main(void)
 {
 int i, j;
 int fib1[SIZE] = {1}, fib2[SIZE] = {2}, fib3[SIZE] = {0};
-printf("%d, ", fib1[0]);
+print_array(fib1);
+printf(", ");
+print_array(fib2);
 for (i = 3; i <= 98; i++)
 {
 add_arrays(fib1, fib2, fib3);
-print_array(fib3);
 if (i != 98)
 printf(", ");
+print_array(fib3);
 for (j = 0; j < SIZE; j++)
 {
 fib1[j] = fib2[j];
