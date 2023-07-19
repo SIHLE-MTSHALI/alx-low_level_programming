@@ -7,38 +7,36 @@
  */
 int main(void)
 {
-unsigned long count, i = 1, j = 2, sum;
-unsigned long a1, a2, b1, b2, carry, temp1, temp2;
-
-for (count = 1; count <= 98; count++)
+int count, m;
+unsigned long i = 1, j = 2, t, s;
+unsigned long i_start, j_start, t_start, s_start;
+printf("%lu, %lu", i, j);
+for (count = 3; count <= 92; count++)
 {
-if (count <= 92)
-{
-sum = i + j;
+t = i + j;
 i = j;
-j = sum;
-printf("%lu", sum);
+j = t;
+printf(", %lu", j);
 }
-else
+i_start = i / 1000000000000000;
+j_start = j / 1000000000000000;
+i %= 1000000000000000;
+j %= 1000000000000000;
+for (; count <= 98; count++)
 {
-if (count == 93)
-{
-a1 = i % 10000000000;
-b1 = i / 10000000000;
-a2 = j % 10000000000;
-b2 = j / 10000000000;
-}
-carry = (a1 + a2) / 10000000000;
-temp1 = (a1 + a2) -carry * 10000000000;
-temp2 = b1 + b2 + carry;
-a1 = a2;
-b1 = b2;
-a2 = temp1;
-b2 = temp2;
-printf("%lu%lu", b2, a2);
-}
-if (count != 98)
-printf(", ");
+t_start = i_start;
+t = i;
+s_start = j_start + i_start + ((i + j) / 1000000000000000);
+s = (i + j) % 1000000000000000;
+printf(", %lu", s_start);
+m = 16 - (s > 0 ? (int)log10((double)s) : 0);
+while (m--)
+printf("0");
+printf("%lu", s);
+i_start = j_start;
+i = j;
+j_start = s_start;
+j = s;
 }
 printf("\n");
 return (0);
