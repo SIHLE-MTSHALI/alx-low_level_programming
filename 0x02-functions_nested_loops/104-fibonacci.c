@@ -39,10 +39,8 @@ printf("%d", a[i--]);
 int main(void)
 {
 int i, j;
-int fib1[SIZE] = {0}, fib2[SIZE] = {1}, fib3[SIZE] = {0};
-fib1[0] = 1;
-fib2[0] = 2;
-printf("%d, %d", fib1[0], fib2[0]);
+int fib1[SIZE] = {1}, fib2[SIZE] = {2}, fib3[SIZE] = {0};
+printf("%d, ", fib1[0]);
 for (i = 3; i <= 98; i++)
 {
 add_arrays(fib1, fib2, fib3);
