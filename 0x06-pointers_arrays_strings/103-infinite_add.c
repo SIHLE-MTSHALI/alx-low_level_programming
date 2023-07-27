@@ -2,10 +2,10 @@
 #include <stdio.h>
 /**
  * infinite_add - Adds two numbers
- * n1: The first number
- * n2: The second number
- * r: The buffer to store the result
- * size_k: The size of the buffer
+ * @n1: The first number
+ * @n2: The second number
+ * @r: The buffer to store the result
+ * @size_k: The size of the buffer
  *
  * Return: A pointer to the result or 0 if result can't be stored in r
  */
