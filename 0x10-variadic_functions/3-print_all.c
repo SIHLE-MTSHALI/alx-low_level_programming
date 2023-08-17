@@ -37,10 +37,13 @@ printf("%s", str);
 break;
 default:
 sep = 0;
-continue;
 }
+i++; /* Move this line outside the switch to ensure incrementation */
+if (format[i - 1] != 'c' && format[i - 1] != 'i' &&
+format[i - 1] != 'f' && format[i - 1] != 's')
+sep = 0;
+else
 sep = 1;
-i++;
 }
 
 printf("\n");
