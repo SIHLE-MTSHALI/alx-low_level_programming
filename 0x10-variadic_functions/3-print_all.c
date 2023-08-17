@@ -9,7 +9,6 @@ void print_all(const char * const format, ...)
 {
 va_list args;
 unsigned int i = 0;
-char *str;
 char sep = 0;
 
 va_start(args, format);
@@ -22,28 +21,28 @@ switch (format[i])
 {
 case 'c':
 printf("%c", va_arg(args, int));
+sep = 1;
 break;
 case 'i':
 printf("%d", va_arg(args, int));
+sep = 1;
 break;
 case 'f':
 printf("%f", va_arg(args, double));
+sep = 1;
 break;
 case 's':
-str = va_arg(args, char *);
-if (str == NULL)
-str = "(nil)";
-printf("%s", str);
+{
+char *str = va_arg(args, char *);
+printf("%s", str ? str : "(nil)");
+sep = 1;
 break;
+}
 default:
 sep = 0;
+break;
 }
-i++; /* Move this line outside the switch to ensure incrementation */
-if (format[i - 1] != 'c' && format[i - 1] != 'i' &&
-format[i - 1] != 'f' && format[i - 1] != 's')
-sep = 0;
-else
-sep = 1;
+i++;
 }
 
 printf("\n");
