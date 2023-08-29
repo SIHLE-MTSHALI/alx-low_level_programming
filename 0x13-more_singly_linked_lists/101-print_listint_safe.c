@@ -2,45 +2,47 @@
 #include <stdio.h>
 
 /**
-* print_listint_safe - prints a listint_t linked list, even if it has a loop
-* @head: pointer to the head of the list
-* Return: number of nodes in the list
-*/
+ * print_listint_safe - Prints a listint_t list, safely.
+ * @head: A pointer to the head of the list.
+ *
+ * Return: The number of nodes in the list. Exits with 98 if failed.
+ */
 size_t print_listint_safe(const listint_t *head)
 {
-const listint_t *slow = head, *fast = head, *marker = head;
+const listint_t *fast = head, *slow = head;
 size_t count = 0;
+int loop_detected = 0;
 
 if (head == NULL)
 exit(98);
 
-/* Check for loop using Floyd's cycle-finding algorithm */
-while (fast != NULL && fast->next != NULL)
+/* Use Floyd's cycle-finding algorithm to detect a loop */
+while (fast && fast->next && slow)
 {
-slow = slow->next;
 fast = fast->next->next;
-if (slow == fast)
-{
-/* Loop detected. Let's print the loop */
-do
-{
-printf("[%p] %d\n", (void *)slow, slow->n);
-count++;
 slow = slow->next;
-}
-while (slow != fast);
-printf("-> [%p] %d\n", (void *)slow, slow->n);
-return (count);
+if (fast == slow)
+{
+loop_detected = 1;
+break;
 }
 }
 
-/* No loop detected. Print the list as usual */
-while (marker != NULL)
+/* Print the list */
+while (head)
 {
-printf("[%p] %d\n", (void *)marker, marker->n);
+printf("[%p] %d\n", (void *)head, head->n);
+head = head->next;
 count++;
-marker = marker->next;
+
+if (loop_detected)
+{
+fast = fast->next;
+if (fast == head)
+break;
 }
+}
+
 return (count);
 }
 
