@@ -1,6 +1,5 @@
 #include "lists.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 /**
 * print_listint_safe - prints a listint_t linked list, even if it has a loop
@@ -9,22 +8,38 @@
 */
 size_t print_listint_safe(const listint_t *head)
 {
-const listint_t *temp = head;
+const listint_t *slow = head, *fast = head, *marker = head;
 size_t count = 0;
+
 if (head == NULL)
-{
 exit(98);
-}
-while (temp)
+
+/* Check for loop using Floyd's cycle-finding algorithm */
+while (fast != NULL && fast->next != NULL)
 {
-printf("[%p] %d\n", (void *)temp, temp->n);
+slow = slow->next;
+fast = fast->next->next;
+if (slow == fast)
+{
+/* Loop detected. Let's print the loop */
+do
+{
+printf("[%p] %d\n", (void *)slow, slow->n);
 count++;
-if (temp->next >= temp)
-{
-printf("-> [%p] %d\n", (void *)temp->next, temp->next->n);
-break;
+slow = slow->next;
 }
-temp = temp->next;
+while (slow != fast);
+printf("-> [%p] %d\n", (void *)slow, slow->n);
+return (count);
+}
+}
+
+/* No loop detected. Print the list as usual */
+while (marker != NULL)
+{
+printf("[%p] %d\n", (void *)marker, marker->n);
+count++;
+marker = marker->next;
 }
 return (count);
 }
