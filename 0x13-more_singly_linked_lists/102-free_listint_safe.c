@@ -4,28 +4,38 @@
 * free_listint_safe - Frees a listint_t list safely.
 * @h: A pointer to the address of the head of the list.
 *
-* Return: The size of the list that was free’d.
+* Return: The size of the list that was free'd.
 */
 size_t free_listint_safe(listint_t **h)
 {
-listint_t *tmp;
 size_t count = 0;
+listint_t *fast = *h, *slow = *h, *free_ptr;
 
-if (!h || *h == NULL)
-return (0);
+/* Detect loop using Floyd's cycle-finding algorithm */
+while (fast && fast->next && slow)
+{
+fast = fast->next->next;
+slow = slow->next;
+if (fast == slow)
+{
+/* Loop exists, so break it */
+fast = *h;
+while (fast != slow)
+{
+fast = fast->next;
+slow = slow->next;
+}
+fast->next = NULL;
+}
+}
 
+/* Free the list */
 while (*h)
 {
-tmp = *h;
+free_ptr = (*h)->next;
+free(*h);
+*h = free_ptr;
 count++;
-if (tmp <= tmp->next)
-{
-free(tmp);
-*h = NULL;
-return (count);
-}
-*h = tmp->next;
-free(tmp);
 }
 
 *h = NULL;
