@@ -28,16 +28,23 @@ for (i = 0; i < EI_NIDENT; i++)
 printf("%02x ", elf_header->e_ident[i]);
 printf("\n");
 printf("  Class:                             ");
-printf("%s\n", elf_header->e_ident[EI_CLASS] == ELFCLASS32 ? "ELF32" : "ELF64");
+printf("%s\n",
+elf_header->e_ident[EI_CLASS] == ELFCLASS32 ? "ELF32" : "ELF64");
 printf("  Data:                              ");
-printf("%s\n", elf_header->e_ident[EI_DATA] == ELFDATA2LSB ? "2's complement, little endian" : "2's complement, big endian");
-printf("  Version:                           %d ", elf_header->e_ident[EI_VERSION]);
+printf("%s\n",
+elf_header->e_ident[EI_DATA] == ELFDATA2LSB ?
+"2's complement, little endian" : "2's complement, big endian");
+printf("  Version:                           %d ",
+elf_header->e_ident[EI_VERSION]);
 printf("(current)\n");
 printf("  OS/ABI:                            UNIX - System V\n");
-printf("  ABI Version:                       %d\n", elf_header->e_ident[EI_ABIVERSION]);
+printf("  ABI Version:                       %d\n",
+elf_header->e_ident[EI_ABIVERSION]);
 printf("  Type:                              ");
-printf("%s\n", elf_header->e_type == ET_EXEC ? "EXEC (Executable file)" : "UNKNOWN");
-printf("  Entry point address:               %p\n", (void *)elf_header->e_entry);
+printf("%s\n",
+elf_header->e_type == ET_EXEC ? "EXEC (Executable file)" : "UNKNOWN");
+printf("  Entry point address:               %p\n",
+(void *)elf_header->e_entry);
 }
 /**
 * main - Entry point
