@@ -1,86 +1,305 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <elf.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <elf.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 /**
-* is_elf_file - Checks if the file is an ELF file
-* @e_ident: The identification bytes of the ELF header
-* Return: 1 if it is an ELF file, 0 otherwise
+* check_elf - Checks if a file is an ELF file
+* @e_ident: Pointer to the ELF header
+* Return: None
 */
-int is_elf_file(unsigned char *e_ident)
-{
-return (e_ident[EI_MAG0] == ELFMAG0 &&
-e_ident[EI_MAG1] == ELFMAG1 &&
-e_ident[EI_MAG2] == ELFMAG2 &&
-e_ident[EI_MAG3] == ELFMAG3);
-}
+void check_elf(unsigned char *e_ident);
+
 /**
-* print_elf_header - Prints the ELF header information
-* @elf_header: Pointer to struct containing ELF header
+* print_magic - Prints the ELF magic numbers
+* @e_ident: Pointer to the ELF header
+* Return: None
 */
-void print_elf_header(Elf64_Ehdr *elf_header)
-{
-int i;
-printf("ELF Header:\n");
-printf("  Magic:   ");
-for (i = 0; i < EI_NIDENT; i++)
-printf("%02x ", elf_header->e_ident[i]);
-printf("\n");
-printf("  Class:                             ");
-printf("%s\n",
-elf_header->e_ident[EI_CLASS] == ELFCLASS32 ? "ELF32" : "ELF64");
-printf("  Data:                              ");
-printf("%s\n",
-elf_header->e_ident[EI_DATA] == ELFDATA2LSB ?
-"2's complement, little endian" : "2's complement, big endian");
-printf("  Version:                           %d ",
-elf_header->e_ident[EI_VERSION]);
-printf("(current)\n");
-printf("  OS/ABI:                            UNIX - System V\n");
-printf("  ABI Version:                       %d\n",
-elf_header->e_ident[EI_ABIVERSION]);
-printf("  Type:                              ");
-printf("%s\n",
-elf_header->e_type == ET_EXEC ? "EXEC (Executable file)" : "UNKNOWN");
-printf("  Entry point address:               %p\n",
-(void *)elf_header->e_entry);
-}
+void print_magic(unsigned char *e_ident);
+
 /**
-* main - Entry point
+* print_class - Prints the ELF class
+* @e_ident: Pointer to the ELF header
+* Return: None
+*/
+void print_class(unsigned char *e_ident);
+
+/**
+* print_data - Prints the ELF data encoding
+* @e_ident: Pointer to the ELF header
+* Return: None
+*/
+void print_data(unsigned char *e_ident);
+
+/**
+* print_version - Prints the ELF version
+* @e_ident: Pointer to the ELF header
+* Return: None
+*/
+void print_version(unsigned char *e_ident);
+
+/**
+* print_osabi - Prints the ELF OS ABI
+* @e_ident: Pointer to the ELF header
+* Return: None
+*/
+void print_osabi(unsigned char *e_ident);
+
+/**
+* print_abi - Prints the ELF ABI Version
+* @e_ident: Pointer to the ELF header
+* Return: None
+*/
+void print_abi(unsigned char *e_ident);
+
+/**
+* print_type - Prints the ELF file type
+* @e_type: ELF file type
+* @e_ident: Pointer to the ELF header
+* Return: None
+*/
+void print_type(unsigned int e_type, unsigned char *e_ident);
+
+/**
+* print_entry - Prints the ELF entry point address
+* @e_entry: ELF entry point address
+* @e_ident: Pointer to the ELF header
+* Return: None
+*/
+void print_entry(unsigned long int e_entry, unsigned char *e_ident);
+
+/**
+* close_elf - Closes the ELF file descriptor
+* @elf: ELF file descriptor
+* Return: None
+*/
+void close_elf(int elf);
+
+/**
+* main - Main function to print ELF header elements
 * @argc: Argument count
 * @argv: Argument vector
-* Return: 0 on success, 98 otherwise
+* Return: 0 on success, 98 on failure
 */
-int main(int argc, char **argv)
+int main(int __attribute__((__unused__)) argc, char *argv[]);
+
+
+
+void check_elf(unsigned char *e_ident)
 {
-int fd;
-Elf64_Ehdr elf_header;
-if (argc != 2)
+int index;
+for (index = 0; index < 4; index++)
 {
-dprintf(STDERR_FILENO, "Usage: elf_header elf_filename\n");
-return (98);
-}
-fd = open(argv[1], O_RDONLY);
-if (fd == -1)
-{
-dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-return (98);
-}
-if (read(fd, &elf_header, sizeof(Elf64_Ehdr)) != sizeof(Elf64_Ehdr))
-{
-dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-close(fd);
-return (98);
-}
-if (!is_elf_file(elf_header.e_ident))
+if (e_ident[index] != 127 && e_ident[index] != 'E' &&
+e_ident[index] != 'L' && e_ident[index] != 'F')
 {
 dprintf(STDERR_FILENO, "Error: Not an ELF file\n");
-close(fd);
-return (98);
+exit(98);
 }
-print_elf_header(&elf_header);
-close(fd);
+}
+}
+
+void print_magic(unsigned char *e_ident)
+{
+int index;
+printf(" Magic: ");
+for (index = 0; index < EI_NIDENT; index++)
+{
+printf("%02x", e_ident[index]);
+if (index == EI_NIDENT - 1)
+printf("\n");
+else
+printf(" ");
+}
+}
+
+void print_class(unsigned char *e_ident)
+{
+printf(" Class: ");
+switch (e_ident[EI_CLASS])
+{
+case ELFCLASSNONE:
+printf("none\n");
+break;
+case ELFCLASS32:
+printf("ELF32\n");
+break;
+case ELFCLASS64:
+printf("ELF64\n");
+break;
+default:
+printf("<unknown: %x>\n", e_ident[EI_CLASS]);
+}
+}
+
+void print_data(unsigned char *e_ident)
+{
+printf(" Data: ");
+switch (e_ident[EI_DATA])
+{
+case ELFDATANONE:
+printf("none\n");
+break;
+case ELFDATA2LSB:
+printf("2's complement, little endian\n");
+break;
+case ELFDATA2MSB:
+printf("2's complement, big endian\n");
+break;
+default:
+printf("<unknown: %x>\n", e_ident[EI_CLASS]);
+}
+}
+
+void print_version(unsigned char *e_ident)
+{
+printf(" Version: %d", e_ident[EI_VERSION]);
+switch (e_ident[EI_VERSION])
+{
+case EV_CURRENT:
+printf(" (current)\n");
+break;
+default:
+printf("\n");
+break;
+}
+}
+
+void print_osabi(unsigned char *e_ident)
+{
+printf(" OS/ABI: ");
+switch (e_ident[EI_OSABI])
+{
+case ELFOSABI_NONE:
+printf("UNIX - System V\n");
+break;
+case ELFOSABI_HPUX:
+printf("UNIX - HP-UX\n");
+break;
+case ELFOSABI_NETBSD:
+printf("UNIX - NetBSD\n");
+break;
+case ELFOSABI_LINUX:
+printf("UNIX - Linux\n");
+break;
+case ELFOSABI_SOLARIS:
+printf("UNIX - Solaris\n");
+break;
+case ELFOSABI_IRIX:
+printf("UNIX - IRIX\n");
+break;
+case ELFOSABI_FREEBSD:
+printf("UNIX - FreeBSD\n");
+break;
+case ELFOSABI_TRU64:
+printf("UNIX - TRU64\n");
+break;
+case ELFOSABI_ARM:
+printf("ARM\n");
+break;
+case ELFOSABI_STANDALONE:
+printf("Standalone App\n");
+break;
+default:
+printf("<unknown: %x>\n", e_ident[EI_OSABI]);
+}
+}
+
+void print_abi(unsigned char *e_ident)
+{
+printf(" ABI Version: %d\n", e_ident[EI_ABIVERSION]);
+}
+
+void print_type(unsigned int e_type, unsigned char *e_ident)
+{
+if (e_ident[EI_DATA] == ELFDATA2MSB)
+e_type >>= 8;
+printf(" Type: ");
+switch (e_type)
+{
+case ET_NONE:
+printf("NONE (None)\n");
+break;
+case ET_REL:
+printf("REL (Relocatable file)\n");
+break;
+case ET_EXEC:
+printf("EXEC (Executable file)\n");
+break;
+case ET_DYN:
+printf("DYN (Shared object file)\n");
+break;
+case ET_CORE:
+printf("CORE (Core file)\n");
+break;
+default:
+printf("<unknown: %x>\n", e_type);
+}
+}
+
+void print_entry(unsigned long int e_entry, unsigned char *e_ident)
+{
+printf(" Entry point address: ");
+if (e_ident[EI_DATA] == ELFDATA2MSB)
+{
+e_entry = ((e_entry << 8) & 0xFF00FF00) | ((e_entry >> 8) & 0xFF00FF);
+e_entry = (e_entry << 16) | (e_entry >> 16);
+}
+if (e_ident[EI_CLASS] == ELFCLASS32)
+printf("%#x\n", (unsigned int)e_entry);
+else
+printf("%#lx\n", e_entry);
+}
+
+void close_elf(int elf)
+{
+if (close(elf) == -1)
+{
+dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", elf);
+exit(98);
+}
+}
+
+int main(int __attribute__((__unused__)) argc, char *argv[])
+{
+Elf64_Ehdr *header;
+int o, r;
+o = open(argv[1], O_RDONLY);
+if (o == -1)
+{
+dprintf(STDERR_FILENO, "Error: Can't read file %s\n", argv[1]);
+exit(98);
+}
+header = malloc(sizeof(Elf64_Ehdr));
+if (header == NULL)
+{
+close_elf(o);
+dprintf(STDERR_FILENO, "Error: Can't read file %s\n", argv[1]);
+exit(98);
+}
+r = read(o, header, sizeof(Elf64_Ehdr));
+if (r == -1)
+{
+free(header);
+close_elf(o);
+dprintf(STDERR_FILENO, "Error: `%s`: No such file\n", argv[1]);
+exit(98);
+}
+check_elf(header->e_ident);
+printf("ELF Header:\n");
+print_magic(header->e_ident);
+print_class(header->e_ident);
+print_data(header->e_ident);
+print_version(header->e_ident);
+print_osabi(header->e_ident);
+print_abi(header->e_ident);
+print_type(header->e_type, header->e_ident);
+print_entry(header->e_entry, header->e_ident);
+free(header);
+close_elf(o);
 return (0);
 }
 
