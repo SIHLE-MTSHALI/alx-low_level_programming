@@ -6,95 +6,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/**
-* check_elf - Checks if a file is an ELF file
-* @e_ident: Pointer to the ELF header
-* Return: None
-*/
+/* Checks if a file is an ELF file */
 void check_elf(unsigned char *e_ident);
-
-/**
-* print_magic - Prints the ELF magic numbers
-* @e_ident: Pointer to the ELF header
-* Return: None
-*/
+/* Prints the magic numbers of an ELF header */
 void print_magic(unsigned char *e_ident);
-
-/**
-* print_class - Prints the ELF class
-* @e_ident: Pointer to the ELF header
-* Return: None
-*/
+/* Prints the class of an ELF header */
 void print_class(unsigned char *e_ident);
-
-/**
-* print_data - Prints the ELF data encoding
-* @e_ident: Pointer to the ELF header
-* Return: None
-*/
+/* Prints the data of an ELF header */
 void print_data(unsigned char *e_ident);
-
-/**
-* print_version - Prints the ELF version
-* @e_ident: Pointer to the ELF header
-* Return: None
-*/
+/* Prints the version of an ELF header */
 void print_version(unsigned char *e_ident);
-
-/**
-* print_osabi - Prints the ELF OS ABI
-* @e_ident: Pointer to the ELF header
-* Return: None
-*/
-void print_osabi(unsigned char *e_ident);
-
-/**
-* print_abi - Prints the ELF ABI Version
-* @e_ident: Pointer to the ELF header
-* Return: None
-*/
+/* Prints the ABI version of an ELF header */
 void print_abi(unsigned char *e_ident);
-
-/**
-* print_type - Prints the ELF file type
-* @e_type: ELF file type
-* @e_ident: Pointer to the ELF header
-* Return: None
-*/
+/* Prints the OS/ABI of an ELF header */
+void print_osabi(unsigned char *e_ident);
+/* Prints the type of an ELF header */
 void print_type(unsigned int e_type, unsigned char *e_ident);
-
-/**
-* print_entry - Prints the ELF entry point address
-* @e_entry: ELF entry point address
-* @e_ident: Pointer to the ELF header
-* Return: None
-*/
+/* Prints the entry point of an ELF header */
 void print_entry(unsigned long int e_entry, unsigned char *e_ident);
-
-/**
-* close_elf - Closes the ELF file descriptor
-* @elf: ELF file descriptor
-* Return: None
-*/
+/* Closes an ELF file */
 void close_elf(int elf);
-
-/**
-* main - Main function to print ELF header elements
-* @argc: Argument count
-* @argv: Argument vector
-* Return: 0 on success, 98 on failure
-*/
-int main(int __attribute__((__unused__)) argc, char *argv[]);
-
-
 
 void check_elf(unsigned char *e_ident)
 {
 int index;
 for (index = 0; index < 4; index++)
 {
-if (e_ident[index] != 127 && e_ident[index] != 'E' &&
-e_ident[index] != 'L' && e_ident[index] != 'F')
+if (e_ident[index] != 127 &&
+e_ident[index] != 'E' &&
+e_ident[index] != 'L' &&
+e_ident[index] != 'F')
 {
 dprintf(STDERR_FILENO, "Error: Not an ELF file\n");
 exit(98);
