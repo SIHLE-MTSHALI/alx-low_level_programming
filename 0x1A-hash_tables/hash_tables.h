@@ -11,8 +11,8 @@
  * @value: The value corresponding to a key
  * @next: A pointer to the next node of the List
  *
- * Description: This struct is for each node in the hash table that
- * stores a key/value pair and a pointer to next node in case of a collision.
+ * Description: Nodes in the hash table storing key-value pairs and
+ * a pointer to handle collisions through chaining.
  */
 typedef struct hash_node_s
 {
@@ -25,12 +25,10 @@ typedef struct hash_node_s
  * struct hash_table_s - Hash table data structure
  * @size: The size of the array
  * @array: An array of size @size, each cell of this array is a pointer
- * to the first node of a linked list because we want our HashTable to
- * use a chaining collision handling
+ * to the first node of a linked list, chaining for collision resolution.
  *
- * Description: This struct is for the hash table itself, containing an
- * array to hold the heads of linked lists (to handle collisions) and
- * the size of the array.
+ * Description: The hash table structure, containing an array to manage
+ * collisions and track the size of the table.
  */
 typedef struct hash_table_s
 {

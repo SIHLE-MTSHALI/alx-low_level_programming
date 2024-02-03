@@ -4,9 +4,9 @@
  * hash_table_create - Creates a hash table.
  * @size: The size of the array of the hash table.
  *
- * Description: Allocates memory for a new hash table structure and
- * its array, setting each pointer in the array to NULL.
- * Return: A pointer to the newly created hash table, or NULL on failure.
+ * Description: Allocates memory for a new hash table and its array,
+ * initializing each array element to NULL.
+ * Return: A pointer to the new hash table, or NULL on failure.
  */
 hash_table_t *hash_table_create(unsigned long int size)
 {
@@ -27,5 +27,7 @@ hash_table_t *hash_table_create(unsigned long int size)
 	for (i = 0; i < size; i++)
 		ht->array[i] = NULL;
 
+	ht->size = size;
 	return (ht);
 }
+
