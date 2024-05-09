@@ -10,24 +10,24 @@
  */
 int exponential_search(int *array, size_t size, int value)
 {
-	size_t bound = 1;
+	size_t i = 1;
+	size_t left, right;
 
-	if (array == NULL)
+	if (array == NULL || size == 0)
 		return (-1);
 
-	while (bound < size && array[bound] < value)
+	while (i < size && array[i] < value)
 	{
-		printf("Value checked array[%ld] = [%d]\n", bound,
-			array[bound]);
-		bound *= 2;
+		printf("Value checked array[%ld] = [%d]\n", i, array[i]);
+		i *= 2;
 	}
 
-	printf("Value found between indexes [%ld] and [%ld]\n",
-		bound / 2, bound < size ? bound : size - 1);
+	left = i / 2;
+	right = i < size ? i : size - 1;
 
-	return (binary_search(array + bound / 2,
-		bound < size ? bound - bound / 2 : size - bound / 2,
-		value) + bound / 2);
+	printf("Value found between indexes [%ld] and [%ld]\n", left, right);
+
+	return (binary_search(array + left, right - left + 1, value) + left);
 }
 
 /**
